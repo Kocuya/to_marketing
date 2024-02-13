@@ -1,0 +1,11 @@
+{
+    "personalInfo" : {
+        "name": "例江 太郎",
+        "notificationFrequency": "every_month",
+        "phoneNumber": "08012345678",
+        "emailAddress": "info@gmail.com",
+        "campanyName": "株式会社〇〇",
+        "post": "〇〇部 部長",
+        "note": "メモ"
+    }
+}

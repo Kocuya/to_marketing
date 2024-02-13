@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
-import 'src/ui/pages/login_page.dart';
-import 'src/services/database_service.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'src/bloc/contact_bloc.dart';
-import 'src/repository/contact_repository.dart';
+import '/scr/views/contact_schedule.dart';
 
-void main() {
-  runApp(MyApp());
+void main()
+{
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '連絡先管理アプリ',
-      home: BlocProvider(
-        create: (context) => ContactBloc(ContactRepository(DatabaseService())),
-        child: LoginPage(),
+      title: '',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
+      home:const ThisMonthContactList(),
     );
   }
 }
