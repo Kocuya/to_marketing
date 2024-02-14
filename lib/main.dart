@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '/scr/views/contact_schedule.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main()
 {
@@ -14,8 +15,9 @@ class MyApp extends StatelessWidget {
       title: '',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        textTheme: GoogleFonts.notoSansJpTextTheme()
       ),
-      home:const Home(),
+      home:const SchedulePage(),
     );
   }
 }

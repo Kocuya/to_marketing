@@ -1,32 +1,47 @@
-class PersonalInfo{
-
+class PersonalInfoItem {
+  final String id;
   final String name;
-  final String notificationFrequency;
+  final String notificationTag;
+  final int notificationFrequency;
   final String? phoneNumber;
-  final String? emailAddress;
-  final String? campanyName;
-  final String? post;
-  final String? note;
+  final String? email;
+  final String? companyName;
+  final String? position;
+  final String? memo;
 
-  PersonalInfo({
+  PersonalInfoItem({
+    required this.id,
     required this.name,
+    required this.notificationTag,
     required this.notificationFrequency,
     this.phoneNumber,
-    this.emailAddress,
-    this.campanyName,
-    this.post,
-    this.note
+    this.email,
+    this.companyName,
+    this.position,
+    this.memo,
   });
-  
-  factory PersonalInfo.fromJson(Map<String, dynamic> json) {
-    return PersonalInfo(
-      name: json['name'],
-      notificationFrequency: json['notificationFrequency'],
-      phoneNumber: json['phoneNumber'],
-      emailAddress: json['emailAddress'],
-      campanyName: json['campanyName'],
-      post: json['post'],
-      note: json['note']
-    );
-  }
+
+  factory PersonalInfoItem.fromJson(Map<String, dynamic> json) => PersonalInfoItem(
+        id: json['id'],
+        name: json['name'],
+        notificationTag: json['notificationTag'],
+        notificationFrequency: json['notificationFrequency'],
+        phoneNumber: json['phoneNumber'],
+        email: json['email'],
+        companyName: json['companyName'],
+        position: json['position'],
+        memo: json['memo'],
+      );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'notificationTag': notificationTag,
+        'notificationFrequency': notificationFrequency,
+        'phoneNumber': phoneNumber,
+        'email': email,
+        'companyName': companyName,
+        'position': position,
+        'memo': memo,
+      };
 }
