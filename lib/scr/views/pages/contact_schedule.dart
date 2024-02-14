@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'add_person.dart';
 
 class SchedulePage extends StatelessWidget {
   const SchedulePage({super.key});
@@ -12,7 +13,10 @@ class SchedulePage extends StatelessWidget {
           IconButton(
             icon:const Icon(Icons.add, size: 32,),
             onPressed: (){
-              print('ここに追加処理');
+              Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const RegistrationPage())
+              );
             },
           )
         ],
@@ -38,6 +42,14 @@ class SchedulePage extends StatelessWidget {
                 alignment: Alignment.topLeft,
                 child: Text('add item', style: TextStyle(fontSize: 20)),
               ),
+            ),
+            Container(
+              height: 30,
+              color: Colors.white,
+              child:const Align(
+                alignment: Alignment.topRight,
+                child: Text('END LIST',style: TextStyle(fontSize: 20), selectionColor: Color.fromARGB(255, 201, 201, 201),),
+              )
             ),
           ],
         ),

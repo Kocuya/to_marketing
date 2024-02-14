@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '/scr/views/contact_schedule.dart';
+import 'scr/views/pages/contact_schedule.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main()
