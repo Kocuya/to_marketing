@@ -42,7 +42,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             TextFormField(
-              decoration:const InputDecoration(labelText: '名前', hintText: '名前を入力してください'),
+              decoration:const InputDecoration(labelText: '名前', hintText: '山田'),
             ),
             DropdownButtonFormField(
               value: _frequency,
@@ -60,19 +60,19 @@ class _RegistrationPageState extends State<RegistrationPage> {
               },
             ),
             TextFormField(
-              decoration:const InputDecoration(labelText: '電話番号', hintText: '電話番号を入力してください'),
+              decoration:const InputDecoration(labelText: '電話番号', hintText: '08012345678'),
             ),
             TextFormField(
-              decoration:const InputDecoration(labelText: 'メールアドレス', hintText: 'メールアドレスを入力してください'),
+              decoration:const InputDecoration(labelText: 'メールアドレス', hintText: 'yamada@gmail.com'),
             ),
             TextFormField(
-              decoration:const InputDecoration(labelText: '会社名', hintText: '会社名を入力してください'),
+              decoration:const InputDecoration(labelText: '会社名', hintText: '株式会社〇〇'),
             ),
             TextFormField(
-              decoration:const InputDecoration(labelText: '役職', hintText: '役職を入力してください'),
+              decoration:const InputDecoration(labelText: '役職', hintText: '〇〇部 部長'),
             ),
             TextFormField(
-              decoration:const InputDecoration(labelText: 'メモ', hintText: 'メモを入力してください'),
+              decoration:const InputDecoration(labelText: 'メモ'),
               maxLines: 3, // メモ入力欄を複数行に
             ),
           ],
