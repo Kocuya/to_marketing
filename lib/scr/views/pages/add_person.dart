@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '/scr/views/pages/contact_schedule.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -10,6 +11,8 @@ class RegistrationPage extends StatefulWidget {
 class _RegistrationPageState extends State<RegistrationPage> {
   String? _frequency = '一週間'; // 通知頻度の初期値
   final List<String> _frequencies = ['一週間', '一ヶ月', '三ヶ月', '六ヶ月', '一年']; // 通知頻度の選択肢
+
+  SchedulePageState schedulePageState = SchedulePageState();
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +32,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           IconButton(
             icon:const Icon(Icons.done),
             onPressed: () {
+              schedulePageState.reloadData();
               Navigator.pop(
                 context,
               );

@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
-import 'contact_schedule.dart';
+import '/scr/views/pages/item_editing.dart';
 
-class ItemEditingPage extends StatefulWidget {
-  const ItemEditingPage({super.key});
+class DetailsItemPage extends StatefulWidget {
+  const DetailsItemPage({super.key});
 
   @override
-  ItemEditingState createState() => ItemEditingState();
+  DetailsItemState createState() => DetailsItemState();
 }
 
-class ItemEditingState extends State<ItemEditingPage> {
+class DetailsItemState extends State<DetailsItemPage> {
   String? _frequency = '一週間'; // 通知頻度の初期値
   final List<String> _frequencies = ['一週間', '一ヶ月', '三ヶ月', '六ヶ月', '一年']; // 通知頻度の選択肢
-
-  SchedulePageState schedulePageState = SchedulePageState();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:const Text('予定編集'),
+        title:const Text('予定詳細'),
         centerTitle: true,
         leading: IconButton(
           icon:const Icon(Icons.close),
@@ -30,11 +28,11 @@ class ItemEditingState extends State<ItemEditingPage> {
         ),
         actions: <Widget>[
           IconButton(
-            icon:const Icon(Icons.done),
+            icon:const Icon(Icons.edit),
             onPressed: () {
-              schedulePageState.reloadData();
-              Navigator.pop(
+              Navigator.push(
                 context,
+                MaterialPageRoute(builder: (context) => const ItemEditingPage())
               );
             },
           ),
