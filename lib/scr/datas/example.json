@@ -1,11 +1,10 @@
 {
-    "personalInfo" : {
-        "name": "山田",
-        "notificationFrequency": "every_month",
-        "phoneNumber": "08012345678",
-        "emailAddress": "info@gmail.com",
-        "campanyName": "株式会社〇〇",
-        "post": "〇〇部 部長",
-        "note": "メモ"
-    }
+    "id": "0",
+    "name": "山田太郎",
+    "nitificationTag": "everyMonth",
+    "phoneNumber": "08012345678",
+    "email": "falltohell666@gmal.com",
+    "companyName": "(株)フォールトゥーヘル",
+    "post": "エンジン開発部 部長",
+    "memo": "なんか怖い"
 }

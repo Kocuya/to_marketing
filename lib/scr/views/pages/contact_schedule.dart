@@ -3,8 +3,8 @@ import 'add_person.dart';
 import '/scr/models/personal_information.dart';
 
 final List<PersonalInfoItem> example = [
-  PersonalInfoItem(id: "0",notificationTag: "everyWeek",notificationFrequency: 1,name: "山田 太郎", companyName: "株式会社サンプル", post: "営業部 部長"),
-  PersonalInfoItem(id: "1",notificationTag: "everymonth",notificationFrequency: 1,name: "佐藤 次郎", companyName: "サンプル株式会社", post: "開発部 部長"),
+  PersonalInfoItem(id: "0",notificationTag: "thisMonth", name: "山田 太郎", companyName: "株式会社サンプル", post: "営業部 部長"),
+  PersonalInfoItem(id: "1",notificationTag: "everymonth", name: "佐藤 次郎", companyName: "サンプル株式会社", post: "開発部 部長"),
   // 他にも必要に応じて追加
 ];
 
@@ -13,6 +13,13 @@ class SchedulePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+  final List<PersonalInfoItem> thisMonthItems = example
+        .where((item) => item.notificationTag == "thisMonth")
+        .toList();
+  final List<PersonalInfoItem> otherItems = example
+        .where((item) => item.notificationTag != "thisMonth")
+        .toList();
+
     return Scaffold(
       appBar: AppBar(
         title:const Text('予定', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26,)),
@@ -33,8 +40,15 @@ class SchedulePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             const SectionTitle(title: '今月の予定'),
-            ...example.map((infoItem) => PersonalInfoTile(infoItem: infoItem)).toList(),
-            const SectionTitle(title: 'その他')
+            ...thisMonthItems.map((item) => ListTile(
+                title: Text(item.name),
+                subtitle: Text('${item.companyName} - ${item.post}'),
+            )),
+            const SectionTitle(title: 'その他'),
+            ...otherItems.map((item) => ListTile(
+                  title: Text(item.name),
+                  subtitle: Text('${item.companyName} - ${item.post}'),
+                )),
           ],
         )
       ),

@@ -2,7 +2,6 @@ class PersonalInfoItem {
   final String id;
   final String name;
   final String notificationTag;
-  final int notificationFrequency;
   final String? phoneNumber;
   final String? email;
   final String? companyName;
@@ -13,7 +12,6 @@ class PersonalInfoItem {
     required this.id,
     required this.name,
     required this.notificationTag,
-    required this.notificationFrequency,
     this.phoneNumber,
     this.email,
     this.companyName,
@@ -25,7 +23,6 @@ class PersonalInfoItem {
         id: json['id'],
         name: json['name'],
         notificationTag: json['notificationTag'],
-        notificationFrequency: json['notificationFrequency'],
         phoneNumber: json['phoneNumber'],
         email: json['email'],
         companyName: json['companyName'],
@@ -37,7 +34,6 @@ class PersonalInfoItem {
         'id': id,
         'name': name,
         'notificationTag': notificationTag,
-        'notificationFrequency': notificationFrequency,
         'phoneNumber': phoneNumber,
         'email': email,
         'companyName': companyName,
