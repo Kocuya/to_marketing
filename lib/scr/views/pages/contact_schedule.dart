@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 import 'add_person.dart';
+import '/scr/models/personal_information.dart';
+
+final List<PersonalInfoItem> example = [
+  PersonalInfoItem(id: "0",notificationTag: "everyWeek",notificationFrequency: 1,name: "山田 太郎", companyName: "株式会社サンプル", post: "営業部 部長"),
+  PersonalInfoItem(id: "1",notificationTag: "everymonth",notificationFrequency: 1,name: "佐藤 次郎", companyName: "サンプル株式会社", post: "開発部 部長"),
+  // 他にも必要に応じて追加
+];
 
 class SchedulePage extends StatelessWidget {
   const SchedulePage({super.key});
@@ -23,36 +30,13 @@ class SchedulePage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            const SectionTitle(title: '今月の予定', ),
-            Container(
-              height: 300,
-              color: Colors.blue[100],
-              child:const Align(
-                alignment: Alignment.topLeft,
-                child: Text('add item', style: TextStyle(fontSize: 20)),
-              ),
-            ),
-            const SectionTitle(title: 'その他'),
-            Container(
-              height: 1000,
-              color: Colors.green[100],
-              child:const Align(
-                alignment: Alignment.topLeft,
-                child: Text('add item', style: TextStyle(fontSize: 20)),
-              ),
-            ),
-            Container(
-              height: 30,
-              color: Colors.white,
-              child:const Align(
-                alignment: Alignment.topRight,
-                child: Text('END LIST',style: TextStyle(fontSize: 20), selectionColor: Color.fromARGB(255, 201, 201, 201),),
-              )
-            ),
+            const SectionTitle(title: '今月の予定'),
+            ...example.map((infoItem) => PersonalInfoTile(infoItem: infoItem)).toList(),
+            const SectionTitle(title: 'その他')
           ],
-        ),
+        )
       ),
     );
   }
@@ -76,6 +60,24 @@ class SectionTitle extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+
+class PersonalInfoTile extends StatelessWidget {
+  final PersonalInfoItem infoItem;
+
+  const PersonalInfoTile({Key? key, required this.infoItem}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(
+        infoItem.name,
+        style:const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      ),
+      subtitle: Text('${infoItem.companyName} - ${infoItem.post}'),
     );
   }
 }

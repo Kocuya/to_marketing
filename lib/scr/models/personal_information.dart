@@ -6,7 +6,7 @@ class PersonalInfoItem {
   final String? phoneNumber;
   final String? email;
   final String? companyName;
-  final String? position;
+  final String? post;
   final String? memo;
 
   PersonalInfoItem({
@@ -17,7 +17,7 @@ class PersonalInfoItem {
     this.phoneNumber,
     this.email,
     this.companyName,
-    this.position,
+    this.post,
     this.memo,
   });
 
@@ -29,7 +29,7 @@ class PersonalInfoItem {
         phoneNumber: json['phoneNumber'],
         email: json['email'],
         companyName: json['companyName'],
-        position: json['position'],
+        post: json['post'],
         memo: json['memo'],
       );
 
@@ -41,7 +41,7 @@ class PersonalInfoItem {
         'phoneNumber': phoneNumber,
         'email': email,
         'companyName': companyName,
-        'position': position,
+        'post': post,
         'memo': memo,
       };
 }
