@@ -7,7 +7,7 @@ import '/scr/models/personal_information.dart';
 Future<List<PersonalInfoItem>> loadPersonalInfoItems() async {
   // アプリのドキュメントディレクトリを取得
   final directory = await getApplicationDocumentsDirectory();
-  final dataDirectory = Directory(path.join(directory.path, '/scr/data'));
+  final dataDirectory = Directory(path.join(directory.path, 'scr/datas/'));
   final List<PersonalInfoItem> items = [];
 
   // ディレクトリが存在するか確認

@@ -13,7 +13,7 @@ class PersonalInfoTile extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const DetailsItemPage())
+          MaterialPageRoute(builder: (context) => DetailsItemPage(item: infoItem))
         );
       },
       child: ListTile(

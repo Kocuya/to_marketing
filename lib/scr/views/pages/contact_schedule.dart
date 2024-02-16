@@ -52,7 +52,7 @@ class SchedulePageState extends State<SchedulePage> {
             onPressed: (){
               Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const RegistrationPage())
+              MaterialPageRoute(builder: (context) => const PersonAddPage())
               );
             },
           )
