@@ -1,15 +1,38 @@
 import 'package:flutter/material.dart';
 import 'add_person.dart';
 import '/scr/models/personal_information.dart';
+import '/scr/views/widgets/cantact_list.dart';
 
 final List<PersonalInfoItem> example = [
   PersonalInfoItem(id: "0",notificationTag: "thisMonth", name: "山田 太郎", companyName: "株式会社サンプル", post: "営業部 部長"),
   PersonalInfoItem(id: "1",notificationTag: "everymonth", name: "佐藤 次郎", companyName: "サンプル株式会社", post: "開発部 部長"),
-  // 他にも必要に応じて追加
+  PersonalInfoItem(id: "2",notificationTag: "thisMonth", name: "フォークリフト次郎", companyName: "株式会社サンプル", post: "新参部 部長"),
+
 ];
 
-class SchedulePage extends StatelessWidget {
+class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
+
+  @override
+  SchedulePageState createState() => SchedulePageState();
+}
+
+class SchedulePageState extends State<SchedulePage> {
+
+  List<PersonalInfoItem> items = [];
+
+  @override
+  void initState() {
+    super.initState();
+    reloadData();
+  }
+
+  void reloadData() async {
+    final newItems = await DataUtils().loadPersonalInfoItems();
+    setState(() {
+      items = newItems;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +52,7 @@ class SchedulePage extends StatelessWidget {
             onPressed: (){
               Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const RegistrationPage())
+              MaterialPageRoute(builder: (context) => const PersonAddPage())
               );
             },
           )
@@ -40,15 +63,9 @@ class SchedulePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             const SectionTitle(title: '今月の予定'),
-            ...thisMonthItems.map((item) => ListTile(
-                title: Text(item.name),
-                subtitle: Text('${item.companyName} - ${item.post}'),
-            )),
+            ...thisMonthItems.map((item) => PersonalInfoTile(infoItem: item,)).toList(),
             const SectionTitle(title: 'その他'),
-            ...otherItems.map((item) => ListTile(
-                  title: Text(item.name),
-                  subtitle: Text('${item.companyName} - ${item.post}'),
-                )),
+            ...otherItems.map((item) => PersonalInfoTile(infoItem: item,)).toList(),
           ],
         )
       ),
@@ -78,20 +95,9 @@ class SectionTitle extends StatelessWidget {
   }
 }
 
-
-class PersonalInfoTile extends StatelessWidget {
-  final PersonalInfoItem infoItem;
-
-  const PersonalInfoTile({Key? key, required this.infoItem}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(
-        infoItem.name,
-        style:const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-      ),
-      subtitle: Text('${infoItem.companyName} - ${infoItem.post}'),
-    );
+class DataUtils {
+  Future<List<PersonalInfoItem>> loadPersonalInfoItems() async {
+    await loadPersonalInfoItems();
+    return [];
   }
 }

@@ -1,22 +1,22 @@
 class PersonalInfoItem {
-  final String id;
+  final String? id;
   final String name;
   final String notificationTag;
   final String? phoneNumber;
   final String? email;
   final String? companyName;
   final String? post;
-  final String? memo;
+  final String? note;
 
   PersonalInfoItem({
-    required this.id,
+    this.id,
     required this.name,
     required this.notificationTag,
     this.phoneNumber,
     this.email,
     this.companyName,
     this.post,
-    this.memo,
+    this.note,
   });
 
   factory PersonalInfoItem.fromJson(Map<String, dynamic> json) => PersonalInfoItem(
@@ -27,7 +27,7 @@ class PersonalInfoItem {
         email: json['email'],
         companyName: json['companyName'],
         post: json['post'],
-        memo: json['memo'],
+        note: json['memo'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -38,6 +38,6 @@ class PersonalInfoItem {
         'email': email,
         'companyName': companyName,
         'post': post,
-        'memo': memo,
+        'memo': note,
       };
 }

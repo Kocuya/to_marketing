@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'scr/views/pages/contact_schedule.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '/scr/bloc/load_data.dart';
+import '/scr/models/personal_information.dart';
 
-void main()
-{
-  runApp(const MyApp());
+Future<void> main()
+async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final items = await loadPersonalInfoItems();
+  runApp(MyApp(items: items));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final List<PersonalInfoItem> items;
+  const MyApp({super.key, required this.items});
+
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
