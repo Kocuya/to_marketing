@@ -26,7 +26,7 @@ Widget build(BuildContext context) {
         title:const Text('人物追加', textAlign: TextAlign.center),
         centerTitle: true,
         leading: IconButton(
-          icon:const Icon(Icons.cancel),
+          icon:const Icon(Icons.close),
           onPressed: () => Navigator.pop(context),
         ),
         actions: <Widget>[
