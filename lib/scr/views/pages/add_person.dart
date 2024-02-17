@@ -6,10 +6,10 @@ class PersonAddPage extends StatefulWidget {
   const PersonAddPage({super.key});
 
   @override
-  _PersonAddPageState createState() => _PersonAddPageState();
+  PersonAddPageState createState() => PersonAddPageState();
 }
 
-class _PersonAddPageState extends State<PersonAddPage> {
+class PersonAddPageState extends State<PersonAddPage> {
   final _formKey = GlobalKey<FormState>();
   String _name = '';
   String _phoneNumber = '';
