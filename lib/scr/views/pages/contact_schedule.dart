@@ -64,6 +64,7 @@ class SchedulePageState extends State<SchedulePage> {
     return Scaffold(
       appBar: AppBar(
         title:const Text('予定', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26,)),
+        automaticallyImplyLeading: false,
         actions: <Widget>[
           IconButton(
             icon:const Icon(Icons.add, size: 32,),
@@ -84,30 +85,9 @@ class SchedulePageState extends State<SchedulePage> {
             ...thisMonthItems.map((item) => PersonalInfoTile(infoItem: item,)).toList(),
             const SectionTitle(title: 'その他'),
             ...otherItems.map((item) => PersonalInfoTile(infoItem: item,)).toList(),
+            const ToDebugPage()
           ],
         )
-      ),
-    );
-  }
-}
-
-class SectionTitle extends StatelessWidget {
-  final String title;
-  const SectionTitle({Key? key, required this.title}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: <Widget>[
-          const Icon(Icons.event_note, size: 30, color: Colors.black), // アイコンを追加
-          const SizedBox(width: 8.0), // アイコンとテキストの間にスペースを追加
-          Text(
-            title,
-            style:const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-        ],
       ),
     );
   }
