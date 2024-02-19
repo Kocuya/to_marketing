@@ -134,7 +134,7 @@ class DataUtils {
       PersonalInfoItem(id: "0",notificationTag: "thisMonth", name: "山田 太郎", phoneNumber: "08012345678", email: "yamada@example.io", companyName: "株式会社サンプル", post: "営業部 部長", note: ""),
       PersonalInfoItem(id: "1",notificationTag: "other", name: "佐藤 次郎", phoneNumber: "08012345678", email: "sato.base@example.io", companyName: "サンプル株式会社", post: "開発部 部長", note: ""),
       PersonalInfoItem(id: "2",notificationTag: "thisMonth", name: "フォークリフト次郎", phoneNumber: "08012345678", email: "forkknif@example.io", companyName: "株式会社サンプル", post: "新参部 部長", note: ""),
-      PersonalInfoItem(id: "3",notificationTag: "other", name: "岸田文雄", phoneNumber: "08037564237", email: "shushojaniyokentousi@naikakuhu.com", companyName: "内閣府", post: "内閣総理大臣 (検討志)", note: ""),
+      PersonalInfoItem(id: "3",notificationTag: "other", name: "岸田文雄", phoneNumber: "08037564237", email: "shushojaniyokentousi@naikakuhu.com", companyName: "内閣府", post: "内閣総理大臣 (検討志)", note: "Old geezer shitheads with glasses who will vote immediately to raise taxes but won't consider and do anything important."),
     ];
 
     // 本番環境ではファイルからの読み込み

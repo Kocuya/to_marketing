@@ -139,6 +139,7 @@ Widget build(BuildContext context) {
                 onSaved: (value) => _post = value!,
               ),
               TextFormField(
+                maxLines: 3,
                 decoration:const InputDecoration(
                   labelText: 'メモ',
                   hintText: 'メモを入力してください',

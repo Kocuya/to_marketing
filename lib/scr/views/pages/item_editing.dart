@@ -98,7 +98,8 @@ class ItemEditingState extends State<ItemEditingPage> {
             ),
             TextField(
               controller: _noteController,
-              decoration: InputDecoration(labelText: 'メモ', hintText: widget.item.note),
+              maxLines: 3,
+              decoration: InputDecoration(labelText: 'メモ', hintText: widget.item.note,),
             ),
           ],
         ),
