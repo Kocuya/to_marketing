@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../bloc/personal_info_bloc.dart';
 import 'add_person.dart';
-// import 'dart:convert';
-// import 'dart:io';
-// import 'package:flutter/services.dart' show rootBundle;
+import 'package:provider/provider.dart';
 import '/scr/models/personal_information.dart';
 import '/scr/views/widgets/cantact_list.dart';
 
@@ -19,105 +18,51 @@ class SchedulePageState extends State<SchedulePage> {
   List<PersonalInfoItem> items = [];
 
   @override
-  void initState() {
-    super.initState();
-    reloadData();
-  }
-
-  void reloadData() async {
-    try {
-      final newItems = await DataUtils().loadPersonalInfoItems();
-      if (!mounted) return; // ここでmountedをチェック
-      setState(() {
-        items = newItems;
-      });
-    } catch (e) {
-      if (!mounted) return; // エラーハンドリング前にもチェック
-      // エラーが発生した場合のUI更新やダイアログ表示のコード
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title:const Text('エラー'),
-          content:const Text('情報を読み込めませんでした。'),
-          actions: <Widget>[
-            TextButton(
-              child:const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
-      );
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-  final List<PersonalInfoItem> thisMonthItems = items
-        .where((item) => item.notificationTag == "thisMonth")
-        .toList();
-  final List<PersonalInfoItem> otherItems = items
-        .where((item) => item.notificationTag != "thisMonth")
-        .toList();
+    final bloc = Provider.of<PersonalInfoBloc>(context);
+    bloc.loadPersonalInfoItems(); // データを読み込む
 
     return Scaffold(
       appBar: AppBar(
-        title:const Text('予定', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26,)),
+        title: const Text('予定', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26)),
         automaticallyImplyLeading: false,
         actions: <Widget>[
           IconButton(
-            icon:const Icon(Icons.add, size: 32,),
-            onPressed: (){
+            icon: const Icon(Icons.add, size: 32),
+            onPressed: () {
               Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const PersonAddPage())
-              );
+                context,
+                MaterialPageRoute(builder: (context) => const PersonAddPage()),
+              ).then((_) => bloc.loadPersonalInfoItems()); // 追加または戻った後にリロード
             },
-          )
+          ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            const SectionTitle(title: '今月の予定'),
-            ...thisMonthItems.map((item) => PersonalInfoTile(infoItem: item,)).toList(),
-            const SectionTitle(title: 'その他'),
-            ...otherItems.map((item) => PersonalInfoTile(infoItem: item,)).toList(),
-            const ToDebugPage()
-          ],
-        )
+      body: StreamBuilder<List<PersonalInfoItem>>(
+        stream: bloc.personalInfoStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final items = snapshot.data!;
+            final List<PersonalInfoItem> thisMonthItems = items.where((item) => item.notificationTag == "thisMonth").toList();
+            final List<PersonalInfoItem> otherItems = items.where((item) => item.notificationTag != "thisMonth").toList();
+
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  const SectionTitle(title: '今月の予定'),
+                  ...thisMonthItems.map((item) => PersonalInfoTile(infoItem: item)).toList(),
+                  const SectionTitle(title: 'その他'),
+                  ...otherItems.map((item) => PersonalInfoTile(infoItem: item)).toList(),
+                  const ToDebugPage()
+                ],
+              ),
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
       ),
     );
-  }
-}
-
-// class DataUtils {
-//   Future<List<PersonalInfoItem>> loadPersonalInfoItems() async {
-//     try {
-//       // JSONファイルのパス
-//       final String response = await rootBundle.loadString('data/personal_info.json');
-//       final data = await json.decode(response);
-//       List<PersonalInfoItem> items = List<PersonalInfoItem>.from(data.map((i) => PersonalInfoItem.fromJson(i)));
-//       return items;
-//     } catch (e) {
-//       throw Exception('Failed to load personal info');
-//     }
-//   }
-// }
-
-class DataUtils {
-  Future<List<PersonalInfoItem>> loadPersonalInfoItems() async {
-    // 仮のデータリスト
-    List<PersonalInfoItem> items = [
-      PersonalInfoItem(id: "0",notificationTag: "thisMonth", name: "山田 太郎", phoneNumber: "08012345678", email: "yamada@example.io", companyName: "株式会社サンプル", post: "営業部 部長", note: ""),
-      PersonalInfoItem(id: "1",notificationTag: "other", name: "佐藤 次郎", phoneNumber: "08012345678", email: "sato.base@example.io", companyName: "サンプル株式会社", post: "開発部 部長", note: ""),
-      PersonalInfoItem(id: "2",notificationTag: "thisMonth", name: "フォークリフト次郎", phoneNumber: "08012345678", email: "forkknif@example.io", companyName: "株式会社サンプル", post: "新参部 部長", note: ""),
-      PersonalInfoItem(id: "3",notificationTag: "other", name: "岸田文雄", phoneNumber: "08037564237", email: "shushojaniyokentousi@naikakuhu.com", companyName: "内閣府", post: "内閣総理大臣 (検討志)", note: "Old geezer shitheads with glasses who will vote immediately to raise taxes but won't consider and do anything important."),
-    ];
-
-    // 本番環境ではファイルからの読み込み
-    return items;
   }
 }

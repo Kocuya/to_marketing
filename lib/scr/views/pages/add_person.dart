@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '/scr/models/personal_information.dart';
-import '/scr/bloc/new_save.dart';
+// import '/scr/bloc/new_save.dart';
 
 class PersonAddPage extends StatefulWidget {
   const PersonAddPage({super.key});
@@ -152,4 +152,8 @@ Widget build(BuildContext context) {
       ),
     );
   }
+}
+
+class DataStorage {
+  savePersonData(PersonalInfoItem personalInfoItem) {}
 }

@@ -1,30 +1,29 @@
 import 'package:flutter/material.dart';
-import 'scr/views/pages/contact_schedule.dart';
+import 'package:provider/provider.dart';
+import '/scr/bloc/personal_info_bloc.dart';
+import '/scr/views/pages/contact_schedule.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '/scr/bloc/load_data.dart';
-import '/scr/models/personal_information.dart';
 
-Future<void> main()
-async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final items = await loadPersonalInfoItems();
-  runApp(MyApp(items: items));
+void main() {
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final List<PersonalInfoItem> items;
-  const MyApp({super.key, required this.items});
+  const MyApp({super.key});
 
-  
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: '',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        textTheme: GoogleFonts.notoSansJpTextTheme()
+    return Provider<PersonalInfoBloc>(
+      create: (context) => PersonalInfoBloc(),
+      dispose: (context, bloc) => bloc.dispose(),
+      child: MaterialApp(
+        home: const SchedulePage(),
+        theme: ThemeData(
+          textTheme: GoogleFonts.notoSansJpTextTheme(
+            Theme.of(context).textTheme,
+          ),
+        ),
       ),
-      home:const SchedulePage(),
     );
   }
 }
