@@ -41,7 +41,7 @@ class LoginState extends State<LoginPage>{
             TextButton(
               child:const Text('確認', style: TextStyle(color: Colors.blue, fontSize: 18)),
               onPressed:() {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const SchedulePage()));
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SchedulePage()), (Route<dynamic> route) => false,);
               },
             ),
             TextButton(
