@@ -1,56 +1,72 @@
 import 'package:flutter/material.dart';
-import 'contact_schedule.dart';
+import '../../models/personal_information.dart';
 
 class ItemEditingPage extends StatefulWidget {
-  const ItemEditingPage({super.key});
+  final PersonalInfoItem item;
+
+  const ItemEditingPage({Key? key, required this.item}) : super(key: key);
 
   @override
   ItemEditingState createState() => ItemEditingState();
 }
 
 class ItemEditingState extends State<ItemEditingPage> {
-  String? _frequency = '一週間'; // 通知頻度の初期値
-  final List<String> _frequencies = ['一週間', '一ヶ月', '三ヶ月', '六ヶ月', '一年']; // 通知頻度の選択肢
+  late TextEditingController _nameController;
+  late TextEditingController _phoneNumberController;
+  late TextEditingController _emailController;
+  late TextEditingController _companyNameController;
+  late TextEditingController _positionController;
+  late TextEditingController _noteController;
+  String? _frequency;
 
-  SchedulePageState schedulePageState = SchedulePageState();
+  final List<String> _frequencies = ['thisMonth', 'other'];
+
+  @override
+  void initState() {
+    super.initState();
+    _frequency = widget.item.notificationTag; // 通知頻度の初期値を設定
+    _nameController = TextEditingController(text: widget.item.name); // 名前
+    _phoneNumberController = TextEditingController(text: widget.item.phoneNumber); // 電話番号
+    _emailController = TextEditingController(text: widget.item.email); // メールアドレス
+    _companyNameController = TextEditingController(text: widget.item.companyName); // 会社名
+    _positionController = TextEditingController(text: widget.item.post); // 役職
+    _noteController = TextEditingController(text: widget.item.note); // メモ
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:const Text('予定編集'),
+        title: const Text('予定編集'),
         centerTitle: true,
         leading: IconButton(
-          icon:const Icon(Icons.close),
+          icon: const Icon(Icons.close),
           onPressed: () {
-            Navigator.pop(
-              context,
-            );
+            Navigator.pop(context);
           },
         ),
         actions: <Widget>[
           IconButton(
-            icon:const Icon(Icons.done),
+            icon: const Icon(Icons.done),
             onPressed: () {
-              schedulePageState.reloadData();
-              Navigator.pop(
-                context,
-              );
+              // 保存処理をここに記述
+              Navigator.pop(context);
             },
           ),
         ],
       ),
       body: SingleChildScrollView(
-        padding:const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            TextFormField(
-              decoration:const InputDecoration(labelText: '名前', hintText: '名前を入力してください'),
+            TextField(
+              controller: _nameController,
+              decoration: InputDecoration(labelText: '名前', hintText: widget.item.name),
             ),
-            DropdownButtonFormField(
+            DropdownButtonFormField<String>(
               value: _frequency,
-              decoration:const InputDecoration(labelText: '通知頻度'),
+              decoration: const InputDecoration(labelText: '通知頻度'),
               items: _frequencies.map((String value) {
                 return DropdownMenuItem(
                   value: value,
@@ -63,25 +79,41 @@ class ItemEditingState extends State<ItemEditingPage> {
                 });
               },
             ),
-            TextFormField(
-              decoration:const InputDecoration(labelText: '電話番号', hintText: '電話番号を入力してください'),
+            // 他のフィールドも同様に設定
+            TextField(
+              controller: _phoneNumberController,
+              decoration: InputDecoration(labelText: '電話番号', hintText: widget.item.phoneNumber),
             ),
-            TextFormField(
-              decoration:const InputDecoration(labelText: 'メールアドレス', hintText: 'メールアドレスを入力してください'),
+            TextField(
+              controller: _emailController,
+              decoration: InputDecoration(labelText: 'メールアドレス', hintText: widget.item.email),
             ),
-            TextFormField(
-              decoration:const InputDecoration(labelText: '会社名', hintText: '会社名を入力してください'),
+            TextField(
+              controller: _companyNameController,
+              decoration: InputDecoration(labelText: '会社名', hintText: widget.item.companyName),
             ),
-            TextFormField(
-              decoration:const InputDecoration(labelText: '役職', hintText: '役職を入力してください'),
+            TextField(
+              controller: _positionController,
+              decoration: InputDecoration(labelText: '役職', hintText: widget.item.post),
             ),
-            TextFormField(
-              decoration:const InputDecoration(labelText: 'メモ', hintText: 'メモを入力してください'),
-              maxLines: 3, // メモ入力欄を複数行に
+            TextField(
+              controller: _noteController,
+              decoration: InputDecoration(labelText: 'メモ', hintText: widget.item.note),
             ),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneNumberController.dispose();
+    _emailController.dispose();
+    _companyNameController.dispose();
+    _positionController.dispose();
+    _noteController.dispose();
+    super.dispose();
   }
 }

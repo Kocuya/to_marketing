@@ -26,7 +26,7 @@ final PersonalInfoItem item;
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ItemEditingPage())
+                MaterialPageRoute(builder: (context) => ItemEditingPage(item: item))
               );
             }
           )

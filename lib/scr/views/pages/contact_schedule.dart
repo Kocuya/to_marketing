@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'add_person.dart';
+// import 'dart:convert';
+// import 'dart:io';
+// import 'package:flutter/services.dart' show rootBundle;
 import '/scr/models/personal_information.dart';
 import '/scr/views/widgets/cantact_list.dart';
 
-final List<PersonalInfoItem> example = [
-  PersonalInfoItem(id: "0",notificationTag: "thisMonth", name: "山田 太郎", companyName: "株式会社サンプル", post: "営業部 部長"),
-  PersonalInfoItem(id: "1",notificationTag: "everymonth", name: "佐藤 次郎", companyName: "サンプル株式会社", post: "開発部 部長"),
-  PersonalInfoItem(id: "2",notificationTag: "thisMonth", name: "フォークリフト次郎", companyName: "株式会社サンプル", post: "新参部 部長"),
-
-];
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
@@ -28,18 +25,39 @@ class SchedulePageState extends State<SchedulePage> {
   }
 
   void reloadData() async {
-    final newItems = await DataUtils().loadPersonalInfoItems();
-    setState(() {
-      items = newItems;
-    });
+    try {
+      final newItems = await DataUtils().loadPersonalInfoItems();
+      if (!mounted) return; // ここでmountedをチェック
+      setState(() {
+        items = newItems;
+      });
+    } catch (e) {
+      if (!mounted) return; // エラーハンドリング前にもチェック
+      // エラーが発生した場合のUI更新やダイアログ表示のコード
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title:const Text('エラー'),
+          content:const Text('情報を読み込めませんでした。'),
+          actions: <Widget>[
+            TextButton(
+              child:const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-  final List<PersonalInfoItem> thisMonthItems = example
+  final List<PersonalInfoItem> thisMonthItems = items
         .where((item) => item.notificationTag == "thisMonth")
         .toList();
-  final List<PersonalInfoItem> otherItems = example
+  final List<PersonalInfoItem> otherItems = items
         .where((item) => item.notificationTag != "thisMonth")
         .toList();
 
@@ -95,9 +113,31 @@ class SectionTitle extends StatelessWidget {
   }
 }
 
+// class DataUtils {
+//   Future<List<PersonalInfoItem>> loadPersonalInfoItems() async {
+//     try {
+//       // JSONファイルのパス
+//       final String response = await rootBundle.loadString('data/personal_info.json');
+//       final data = await json.decode(response);
+//       List<PersonalInfoItem> items = List<PersonalInfoItem>.from(data.map((i) => PersonalInfoItem.fromJson(i)));
+//       return items;
+//     } catch (e) {
+//       throw Exception('Failed to load personal info');
+//     }
+//   }
+// }
+
 class DataUtils {
   Future<List<PersonalInfoItem>> loadPersonalInfoItems() async {
-    await loadPersonalInfoItems();
-    return [];
+    // 仮のデータリスト
+    List<PersonalInfoItem> items = [
+      PersonalInfoItem(id: "0",notificationTag: "thisMonth", name: "山田 太郎", phoneNumber: "08012345678", email: "yamada@example.io", companyName: "株式会社サンプル", post: "営業部 部長", note: ""),
+      PersonalInfoItem(id: "1",notificationTag: "other", name: "佐藤 次郎", phoneNumber: "08012345678", email: "sato.base@example.io", companyName: "サンプル株式会社", post: "開発部 部長", note: ""),
+      PersonalInfoItem(id: "2",notificationTag: "thisMonth", name: "フォークリフト次郎", phoneNumber: "08012345678", email: "forkknif@example.io", companyName: "株式会社サンプル", post: "新参部 部長", note: ""),
+      PersonalInfoItem(id: "3",notificationTag: "other", name: "岸田文雄", phoneNumber: "08037564237", email: "shushojaniyokentousi@naikakuhu.com", companyName: "内閣府", post: "内閣総理大臣 (検討志)", note: ""),
+    ];
+
+    // 本番環境ではファイルからの読み込み
+    return items;
   }
 }
