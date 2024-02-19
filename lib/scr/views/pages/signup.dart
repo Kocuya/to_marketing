@@ -19,7 +19,7 @@ class SignupState extends State<SignupPage>{
         title:const Text('サインイン'),
         centerTitle: true,
       ),
-      body: Form(
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             const SizedBox(height: 180,),

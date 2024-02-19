@@ -61,7 +61,7 @@ class ToDebugPage extends StatelessWidget{
           MaterialPageRoute(builder: (context) =>const LoginPage())
         );
       },
-      child:const Text('*debug* tap to the login page', style: TextStyle(color: Colors.red, fontSize: 20))
+      child:const Text('*debug* tap this to login page', style: TextStyle(color: Colors.red, fontSize: 20))
     );
   }
 }

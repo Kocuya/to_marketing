@@ -18,7 +18,7 @@ class LoginState extends State<LoginPage>{
         title:const Text('ログイン'),
         centerTitle: true,
       ),
-      body: Form(
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             const SizedBox(height: 200,),
