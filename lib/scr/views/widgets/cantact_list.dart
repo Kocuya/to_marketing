@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '/scr/models/personal_information.dart';
-import '/scr/views/pages/details_of_item.dart';
+import 'package:provider/provider.dart';
+import 'package:to_marketing/scr/bloc/personal_info_bloc.dart';
+import 'package:to_marketing/scr/views/pages/details_of_item.dart';
+import '../../models/personal_information.dart';
 import '../../views/pages/login.dart';
 
 class PersonalInfoTile extends StatelessWidget {
@@ -10,12 +12,14 @@ class PersonalInfoTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of<PersonalInfoBloc>(context, listen: true);
+    bloc.loadPersonalInfoItems();
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => DetailsItemPage(item: infoItem))
-        );
+        ).then((_) => bloc.loadPersonalInfoItems());
       },
       child: ListTile(
         title: Text(

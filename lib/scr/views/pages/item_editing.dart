@@ -49,8 +49,17 @@ class ItemEditingState extends State<ItemEditingPage> {
           IconButton(
             icon: const Icon(Icons.done),
             onPressed: () {
-              // 保存処理をここに記述
-              Navigator.pop(context);
+              final updatedItem = PersonalInfoItem(
+                id: widget.item.id,
+                name: _nameController.text,
+                phoneNumber: _phoneNumberController.text,
+                email: _emailController.text,
+                companyName: _companyNameController.text,
+                post: _positionController.text,
+                note: _noteController.text,
+                notificationTag: _frequency ?? widget.item.notificationTag, // 通知頻度が選択されていない場合、元の値を使用
+              );
+              Navigator.pop(context, updatedItem);
             },
           ),
         ],

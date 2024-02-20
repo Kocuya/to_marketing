@@ -1,52 +1,55 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import '/scr/models/personal_information.dart';
 
 class DataUtils {
-  Future<List<PersonalInfoItem>> loadPersonalInfoItems() async {
-    // 仮のデータリスト
-    List<PersonalInfoItem> items = [
-      PersonalInfoItem(
-        id: "0",
-        notificationTag: "thisMonth", // このアイテムは「今月の予定」に分類されます
-        name: "斉藤百済",
-        phoneNumber: "08011112222",
-        email: "hyakusai.saito@example.com",
-        companyName: "株式会社百済",
-        post: "代表取締役",
-        note: "重要なクライアント"
-      ),
-      PersonalInfoItem(
-        id: "1",
-        notificationTag: "other", // このアイテムは「その他」に分類されます
-        name: "フォークリフト次郎",
-        phoneNumber: "08033334444",
-        email: "forklift.jiro@example.com",
-        companyName: "株式会社フォーク",
-        post: "物流部長",
-        note: "物流最適化プロジェクト担当"
-      ),
-      PersonalInfoItem(
-        id: "2",
-        notificationTag: "thisMonth", // このアイテムも「今月の予定」に分類されます
-        name: "遠田藤太",
-        phoneNumber: "08055556666",
-        email: "tohta.enda@example.com",
-        companyName: "遠田商事",
-        post: "営業部 部長",
-        note: "新規開拓チームリーダー"
-      ),
-      PersonalInfoItem(
-        id: "3",
-        notificationTag: "other", // このアイテムも「今月の予定」に分類されます
-        name: "岸田文雄",
-        phoneNumber: "08056737564",
-        email: "kishidaaaaa@example.com",
-        companyName: "内閣府",
-        post: "内閣総理大臣(検討志)",
-        note: "増税クソメガネ"
-      ),
-    ];
+  // データを保存するディレクトリのパスを取得
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return path.join(directory.path, 'to_marketing/datas/');
+  }
 
-    // 本番環境では外部データソースからの読み込みなど、適切なデータ取得方法を実装してください。
+  // データを保存するファイルを指定
+  Future<File> _localFile(String fileName) async {
+    final localPath = await _localPath;
+    return File('$localPath$fileName.json');
+  }
+
+  // パーソナル情報をJSONファイルとして保存
+  Future<File> savePersonalInfoItem(PersonalInfoItem data) async {
+    final localPath = await _localPath;
+    final directory = Directory(localPath);
+
+    if (!await directory.exists()) {
+      await directory.create(recursive: true);
+    }
+    final file = await _localFile(data.id); // ファイル名をIDに基づいて指定
+    return file.writeAsString(json.encode(data.toJson()));
+  }
+
+  // 保存されたパーソナル情報を読み込む
+  Future<List<PersonalInfoItem>> loadPersonalInfoItems() async {
+    final List<PersonalInfoItem> items = [];
+    try {
+      final localPath = await _localPath;
+      final dataDirectory = Directory(localPath);
+
+      if (dataDirectory.existsSync()) {
+        final files = dataDirectory.listSync().where((item) => path.extension(item.path) == '.json');
+
+        for (var file in files) {
+          final content = await File(file.path).readAsString();
+          final Map<String, dynamic> jsonData = jsonDecode(content);
+          items.add(PersonalInfoItem.fromJson(jsonData));
+        }
+      }
+    } catch (e) {
+      // エラーハンドリング: 例外が発生した場合の処理をここに記述
+      print("ファイルの読み込み中にエラーが発生しました: $e");
+      // 必要に応じて、エラーを上位のレイヤーに伝播させるか、空のリストを返すなどの対応を行う
+    }
     return items;
   }
 }

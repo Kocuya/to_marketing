@@ -4,6 +4,7 @@ import 'add_person.dart';
 import 'package:provider/provider.dart';
 import '/scr/models/personal_information.dart';
 import '/scr/views/widgets/cantact_list.dart';
+import '/scr/views/pages/details_of_item.dart';
 
 
 class SchedulePage extends StatefulWidget {
@@ -13,13 +14,13 @@ class SchedulePage extends StatefulWidget {
   SchedulePageState createState() => SchedulePageState();
 }
 
-class SchedulePageState extends State<SchedulePage> {
+class SchedulePageState extends State<SchedulePage> with RouteAware {
 
   List<PersonalInfoItem> items = [];
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<PersonalInfoBloc>(context);
+    final bloc = Provider.of<PersonalInfoBloc>(context, listen: true);
     bloc.loadPersonalInfoItems(); // データを読み込む
 
     return Scaffold(
@@ -62,6 +63,33 @@ class SchedulePageState extends State<SchedulePage> {
             return const Center(child: CircularProgressIndicator());
           }
         },
+      ),
+    );
+  }
+}
+
+class PersonalInfoTile extends StatelessWidget {
+  final PersonalInfoItem infoItem;
+
+  const PersonalInfoTile({Key? key, required this.infoItem}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<PersonalInfoBloc>(context, listen: true);
+    bloc.loadPersonalInfoItems();
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => DetailsItemPage(item: infoItem))
+        ).then((_) => bloc.loadPersonalInfoItems());
+      },
+      child: ListTile(
+        title: Text(
+          infoItem.name,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text('${infoItem.companyName} - ${infoItem.post}'),
       ),
     );
   }

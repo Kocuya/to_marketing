@@ -1,5 +1,7 @@
+import 'package:uuid/uuid.dart';
+
 class PersonalInfoItem {
-  final String? id;
+  final String id;
   final String name;
   final String notificationTag;
   final String? phoneNumber;
@@ -9,7 +11,7 @@ class PersonalInfoItem {
   final String? note;
 
   PersonalInfoItem({
-    this.id,
+    String? id, // idをオプショナルに
     required this.name,
     required this.notificationTag,
     this.phoneNumber,
@@ -17,7 +19,7 @@ class PersonalInfoItem {
     this.companyName,
     this.post,
     this.note,
-  });
+  }) : id = id ?? const Uuid().v4();
 
   factory PersonalInfoItem.fromJson(Map<String, dynamic> json) => PersonalInfoItem(
         id: json['id'],
@@ -27,7 +29,7 @@ class PersonalInfoItem {
         email: json['email'],
         companyName: json['companyName'],
         post: json['post'],
-        note: json['memo'],
+        note: json['note'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -38,6 +40,6 @@ class PersonalInfoItem {
         'email': email,
         'companyName': companyName,
         'post': post,
-        'memo': note,
+        'note': note,
       };
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '/scr/models/personal_information.dart';
-// import '/scr/bloc/new_save.dart';
+import '/scr/bloc/data_storage.dart';
 
 class PersonAddPage extends StatefulWidget {
   const PersonAddPage({super.key});
@@ -17,7 +17,7 @@ class PersonAddPageState extends State<PersonAddPage> {
   String _companyName = '';
   String _post = '';
   String _note = '';
-  String _notificationTag = '毎日';
+  String _notificationTag = 'thisMonth';
 
   @override
 Widget build(BuildContext context) {
@@ -57,8 +57,10 @@ Widget build(BuildContext context) {
         scaffoldMessenger.showSnackBar(
           const SnackBar(content: Text('データを保存しました')),
         );
+        Navigator.pop(context);
       } catch (e) {
         // エラー処理
+        print('失敗しています');
         scaffoldMessenger.showSnackBar(
           const SnackBar(content: Text('データの保存に失敗しました')),
         );
@@ -97,7 +99,7 @@ Widget build(BuildContext context) {
                 decoration:const InputDecoration(
                   labelText: '通知頻度',
                 ),
-                items: ['毎日', '週に一度', '月に一度']
+                items: ['thisMonth', 'other']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -152,8 +154,4 @@ Widget build(BuildContext context) {
       ),
     );
   }
-}
-
-class DataStorage {
-  savePersonData(PersonalInfoItem personalInfoItem) {}
 }
