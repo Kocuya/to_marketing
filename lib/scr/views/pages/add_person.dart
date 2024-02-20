@@ -117,6 +117,7 @@ Widget build(BuildContext context) {
                   labelText: '電話番号',
                   hintText: '電話番号を入力してください',
                 ),
+                keyboardType: TextInputType.number,
                 onSaved: (value) => _phoneNumber = value!,
               ),
               TextFormField(
