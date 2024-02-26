@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'signup.dart';
 import 'contact_schedule.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,7 +11,38 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginState extends State<LoginPage> {
-  final _formKey = GlobalKey<FormState>(); // フォームの状態を管理するためのキー
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<void> _login() async {
+    try {
+      // ignore: unused_local_variable
+      final UserCredential userCredential =
+          await _auth.signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+      // ログイン成功時の処理
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const SchedulePage()),
+        (Route<dynamic> route) => false,
+      );
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = 'ログインに失敗しました。もう一度お試しください。';
+      if (e.code == 'user-not-found') {
+        errorMessage = 'ユーザーが見つかりません。';
+      } else if (e.code == 'wrong-password') {
+        errorMessage = 'パスワードが間違っています。';
+      }
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(errorMessage)));
+    } catch (e) {
+      print(e); // エラーの詳細をコンソールに表示
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,71 +53,52 @@ class LoginState extends State<LoginPage> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        child: Form( // Formウィジェットを追加
+        child: Form(
           key: _formKey,
           child: Column(
             children: <Widget>[
               const SizedBox(height: 200),
               TextFormField(
-                decoration: const InputDecoration(label: Text('名前')),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '名前を入力してください';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
+                controller: _emailController,
                 decoration: const InputDecoration(label: Text('メールアドレス')),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'メールアドレスを入力してください';
                   }
-                  String pattern =
-                  r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$';
-                  RegExp regex = RegExp(pattern);
-                  if (!regex.hasMatch(value)) {
-                    return '有効なメールアドレスを入力してください';
-                  }
                   return null;
                 },
               ),
               TextFormField(
+                controller: _passwordController,
                 decoration: const InputDecoration(label: Text('パスワード')),
-                obscureText: true, // パスワードを隠す
+                obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'パスワードを入力してください';
-                  }
-                  String pattern = r'^[a-zA-Z0-9]+$';
-                  RegExp regex = RegExp(pattern);
-                  if (!regex.hasMatch(value)) {
-                    return '英数字のみを入力してください';
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 50),
               TextButton(
-                child: const Text('確認', style: TextStyle(color: Colors.blue, fontSize: 18)),
+                child: const Text('ログイン',
+                    style: TextStyle(color: Colors.blue, fontSize: 20)),
                 onPressed: () {
-                  // フォームのバリデーションを実行
                   if (_formKey.currentState!.validate()) {
-                    // フォームが有効な場合、ナビゲーションを実行
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => const SchedulePage()),
-                      (Route<dynamic> route) => false,
-                    );
+                    _login();
                   }
                 },
               ),
               TextButton(
-                child: const Text('アカウントをお持ちでない方はこちら', style: TextStyle(color: Colors.blue)),
+                child: const Text('アカウントをお持ちでない方はこちら',
+                    style: TextStyle(color: Colors.blue, fontSize: 20)),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const SignupPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignupPage()));
                 },
-              )
+              ),
             ],
           ),
         ),

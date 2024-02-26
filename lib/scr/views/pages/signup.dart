@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'login.dart';
 import 'contact_schedule.dart';
-import 'debug_page.dart';
+import 'debug_page.dart'; // 利用規約ページとして仮に使用
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -11,106 +12,133 @@ class SignupPage extends StatefulWidget {
 }
 
 class SignupState extends State<SignupPage> {
-  final _formKey = GlobalKey<FormState>(); // フォームの状態を管理するためのキー
-  final _passwordController = TextEditingController(); // パスワードの入力を管理するコントローラー
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<void> _signUp() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    final confirmPassword = _confirmPasswordController.text.trim();
+    if (_formKey.currentState!.validate()) {
+      if (password == confirmPassword) {
+        try {
+          // ignore: unused_local_variable
+          final UserCredential userCredential =
+              await _auth.createUserWithEmailAndPassword(
+            email: email,
+            password: password,
+          );
+          // サインアップ成功時の処理
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const SchedulePage()),
+            (Route<dynamic> route) => false,
+          );
+        } on FirebaseAuthException catch (e) {
+          String errorMessage = 'サインアップに失敗しました。もう一度お試しください。';
+          if (e.code == 'weak-password') {
+            errorMessage = '提供されたパスワードが弱すぎます。';
+          } else if (e.code == 'email-already-in-use') {
+            errorMessage = 'メールアドレスは既に使用されています。';
+          }
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(errorMessage)));
+        } catch (e) {
+          print(e); // エラーの詳細をコンソールに表示
+        }
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('パスワードが一致しません。')));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('サインイン'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Form( // Formウィジェットを追加
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: 180),
-              TextFormField(
-                decoration: const InputDecoration(label: Text('名前')),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '名前を入力してください';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(label: Text('メールアドレス')),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'メールアドレスを入力してください';
-                  }
-                  String pattern =
-                  r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$';
-                  RegExp regex = RegExp(pattern);
-                  if (!regex.hasMatch(value)) {
-                    return '有効なメールアドレスを入力してください';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _passwordController, // パスワードのコントローラーを設定
-                decoration: const InputDecoration(label: Text('パスワード')),
-                obscureText: true, // パスワードを隠す
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'パスワードを入力してください';
-                  }else if(value.length < 5){
-                    return 'パスワードは5文字以上である必要があります';
-                  }
-                  String pattern = r'^[a-zA-Z0-9]+$';
-                  RegExp regex = RegExp(pattern);
-                  if (!regex.hasMatch(value)) {
-                    return 'パスワードには英数字のみ使用できます';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(label: Text('確認パスワード')),
-                obscureText: true, // パスワードを隠す
-                validator: (value) {
-                  if (value != _passwordController.text) {
-                    return 'パスワードが一致しません';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 50),
-              TextButton(
-                child: const Text('確認', style: TextStyle(color: Colors.blue, fontSize: 18)),
-                onPressed: () {
-                  // フォームのバリデーションを実行
-                  if (_formKey.currentState!.validate()) {
-                    // フォームが有効な場合、ナビゲーションを実行
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => const SchedulePage()),
-                      (Route<dynamic> route) => false,
-                    );
-                  }
-                },
-              ),
-              TextButton(
-                child: const Text('利用規約', style: TextStyle(color: Colors.blue, fontSize: 18)),
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const DebugPage()));
-                },
-              ),
-              TextButton(
-                child: const Text('アカウントをお持ちの方はこちら', style: TextStyle(color: Colors.blue)),
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
-                },
-              ),
-            ],
-          ),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: const Text('サインアップ'),
+          centerTitle: true,
         ),
-      ),
-    );
+        body: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: <Widget>[
+                const SizedBox(height: 180),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(labelText: 'メールアドレス'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'メールアドレスを入力してください';
+                    }
+                    String pattern =
+                        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+                    RegExp regex = RegExp(pattern);
+                    if (!regex.hasMatch(value)) {
+                      return '有効なメールアドレスを入力してください';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(labelText: 'パスワード'),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'パスワードを入力してください';
+                    } else if (value.length < 6) {
+                      return 'パスワードは6文字以上である必要があります';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _confirmPasswordController,
+                  decoration: const InputDecoration(labelText: 'パスワード確認'),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value != _passwordController.text) {
+                      return 'パスワードが一致しません';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 50),
+                TextButton(
+                  onPressed: _signUp,
+                  child: const Text('サインアップ',
+                      style: TextStyle(color: Colors.blue, fontSize: 20)),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const DebugPage()));
+                  },
+                  child: const Text('利用規約',
+                      style: TextStyle(color: Colors.blue, fontSize: 20)),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()));
+                  },
+                  child: const Text('アカウントをお持ちの方はこちら',
+                      style: TextStyle(color: Colors.blue, fontSize: 20)),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }
