@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:to_marketing/scr/bloc/personal_info_bloc.dart';
-import '../pages/login.dart';
 import '/scr/models/personal_information.dart';
 import '/scr/views/pages/details_of_item.dart';
 
@@ -16,6 +15,35 @@ class PersonalInfoTile extends StatefulWidget {
 
 class PersonalInfoTileState extends State<PersonalInfoTile> {
   bool _isDone = false;
+
+  Color getColorForNotificationTag(String notificationTag) {
+    switch (notificationTag) {
+      case 'everyMonth':
+        return Colors.lightBlue; // 水色
+      case 'everyQuarterYear':
+        return Colors.orange; // オレンジ
+      case 'everyHarfYear':
+        return Colors.green; // 緑
+      case 'everyYear':
+        return Colors.red; // 赤
+      default:
+        return Colors.grey; // デフォルトの色
+    }
+  }
+  String getJapanese(String notificationTag) {
+    switch (notificationTag) {
+      case 'everyMonth':
+        return '一ヶ月毎'; // 水色
+      case 'everyQuarterYear':
+        return '三ヶ月毎'; // オレンジ
+      case 'everyHarfYear':
+        return '六ヶ月毎'; // 緑
+      case 'everyYear':
+        return '　一年毎'; // 赤
+      default:
+        return 'その他'; // デフォルトの色
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +93,7 @@ class PersonalInfoTileState extends State<PersonalInfoTile> {
                         Container(
                           padding:const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
-                            color: Colors.red,
+                            color: getColorForNotificationTag(widget.infoItem.notificationTag),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Row(
@@ -74,7 +102,7 @@ class PersonalInfoTileState extends State<PersonalInfoTile> {
                               const Icon(Icons.notifications, color: Colors.white, size: 20),
                               const SizedBox(width: 4),
                               Text(
-                                widget.infoItem.notificationTag,
+                                getJapanese(widget.infoItem.notificationTag),
                                 style:const TextStyle(color: Colors.white, fontSize: 14),
                               ),
                             ],
@@ -122,11 +150,11 @@ class SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
       child: Row(
         children: <Widget>[
           const Icon(Icons.event_note,
-              size: 30, color: Colors.black), // アイコンを追加
+              size: 34, color: Colors.black), // アイコンを追加
           const SizedBox(width: 8.0), // アイコンとテキストの間にスペースを追加
           Text(
             title,
@@ -135,19 +163,5 @@ class SectionTitle extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class ToDebugPage extends StatelessWidget {
-  const ToDebugPage({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-        onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const LoginPage()));
-        },
-        child: const Text('*debug* tap this to login page',
-            style: TextStyle(color: Colors.red, fontSize: 20)));
   }
 }

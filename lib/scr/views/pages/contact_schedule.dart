@@ -4,7 +4,7 @@ import 'add_person.dart';
 import 'package:provider/provider.dart';
 import '/scr/models/personal_information.dart';
 import '/scr/views/widgets/cantact_list.dart';
-
+import 'option.dart';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
@@ -14,7 +14,6 @@ class SchedulePage extends StatefulWidget {
 }
 
 class SchedulePageState extends State<SchedulePage> with RouteAware {
-
   List<PersonalInfoItem> items = [];
 
   @override
@@ -24,9 +23,16 @@ class SchedulePageState extends State<SchedulePage> with RouteAware {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('予定', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26)),
+        title: const Text('予定',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26)),
         automaticallyImplyLeading: false,
         actions: <Widget>[
+          IconButton(
+            icon:const Icon(Icons.more_vert, size: 32),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute (builder: (context) => const OptionPage()));
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.add, size: 32),
             onPressed: () {
@@ -43,18 +49,25 @@ class SchedulePageState extends State<SchedulePage> with RouteAware {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final items = snapshot.data!;
-            final List<PersonalInfoItem> thisMonthItems = items.where((item) => item.notificationTag == "thisMonth").toList();
-            final List<PersonalInfoItem> otherItems = items.where((item) => item.notificationTag != "thisMonth").toList();
+            final List<PersonalInfoItem> thisMonthItems = items
+                .where((item) => item.notificationTag == "everyMonth")
+                .toList();
+            final List<PersonalInfoItem> otherItems = items
+                .where((item) => item.notificationTag != "everyMonth")
+                .toList();
 
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   const SectionTitle(title: '今月の予定'),
-                  ...thisMonthItems.map((item) => PersonalInfoTile(infoItem: item)).toList(),
+                  ...thisMonthItems
+                      .map((item) => PersonalInfoTile(infoItem: item))
+                      .toList(),
                   const SectionTitle(title: 'その他'),
-                  ...otherItems.map((item) => PersonalInfoTile(infoItem: item)).toList(),
-                  const ToDebugPage()
+                  ...otherItems
+                      .map((item) => PersonalInfoTile(infoItem: item))
+                      .toList(),
                 ],
               ),
             );

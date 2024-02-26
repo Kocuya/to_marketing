@@ -17,7 +17,7 @@ class PersonAddPageState extends State<PersonAddPage> {
   String _companyName = '';
   String _post = '';
   String _note = '';
-  String _notificationTag = 'thisMonth';
+  String _notificationTag = 'everyMonth';
 
   @override
 Widget build(BuildContext context) {
@@ -99,7 +99,7 @@ Widget build(BuildContext context) {
                 decoration:const InputDecoration(
                   labelText: '通知頻度',
                 ),
-                items: ['thisMonth', 'other']
+                items: ['everyMonth', 'everyQuarterYear', 'everyHarfYear', 'everyYear']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,

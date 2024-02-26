@@ -19,7 +19,7 @@ class ItemEditingState extends State<ItemEditingPage> {
   late TextEditingController _noteController;
   String? _frequency;
 
-  final List<String> _frequencies = ['thisMonth', 'other'];
+  final List<String> _frequencies = ['everyMonth', 'everyQuarterYear', 'everyHarfYear', 'everyYear'];
 
   @override
   void initState() {

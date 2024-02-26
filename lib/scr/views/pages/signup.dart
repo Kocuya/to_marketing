@@ -51,7 +51,7 @@ class SignupState extends State<SignupPage> {
         }
       } else {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('パスワードが一致しません。')));
+            .showSnackBar(const SnackBar(content: Text('パスワードが一致しません。')));
       }
     }
   }
