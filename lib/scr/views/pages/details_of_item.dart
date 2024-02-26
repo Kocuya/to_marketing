@@ -99,6 +99,15 @@ class DetailsItemPageState extends State<DetailsItemPage> {
               label: 'メモ',
               title: '${item.note}',
             ),
+            Center(
+              child: TextButton(
+                onPressed: () async {
+                  await DataStorage().deletePersonData(item);
+                  Navigator.pop(context);
+                }, 
+                child:const Text('削除', style: TextStyle(color: Colors.red, fontSize: 20))
+              )
+            )
           ],
         ),
       ),

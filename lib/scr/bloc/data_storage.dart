@@ -16,16 +16,27 @@ class DataStorage {
   }
 
   Future<File> savePersonData(PersonalInfoItem personalInfoItem) async {
-  final id = personalInfoItem.id;
-  final file = await _localFile(id);
+    final id = personalInfoItem.id;
+    final file = await _localFile(id);
 
-  // ディレクトリの存在を確認し、存在しなければ作成
-  final directory = await Directory(path.dirname(file.path));
-  if (!await directory.exists()) {
-    await directory.create(recursive: true);
+    // ディレクトリの存在を確認し、存在しなければ作成
+    final directory = await Directory(path.dirname(file.path));
+    if (!await directory.exists()) {
+      await directory.create(recursive: true);
+    }
+
+    // PersonalInfoItemオブジェクトをJSONに変換して保存
+    return file.writeAsString(json.encode(personalInfoItem.toJson()));
   }
 
-  // PersonalInfoItemオブジェクトをJSONに変換して保存
-  return file.writeAsString(json.encode(personalInfoItem.toJson()));
-}
+  Future<void> deletePersonData(PersonalInfoItem personalInfoItem) async {
+    final file = await _localFile(personalInfoItem.id);
+  
+    if (await file.exists()) {
+      await file.delete();
+      print("ファイルが削除されました: ${file.path}");
+    } else {
+      print("削除するファイルが見つかりません: ${file.path}");
+    }
+  }
 }
