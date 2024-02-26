@@ -3,8 +3,19 @@ import 'package:provider/provider.dart';
 import '/scr/bloc/personal_info_bloc.dart';
 import '/scr/views/pages/contact_schedule.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    print('Firebase initialization completed');
+  } catch (e) {
+    print('Firebase initialization failed with error: $e');
+  }
   runApp(const MyApp());
 }
 

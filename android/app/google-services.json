@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "28988034717",
+    "project_id": "tomarketing-77f32",
+    "storage_bucket": "tomarketing-77f32.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:28988034717:android:3b9a3d7eada782ba060e74",
+        "android_client_info": {
+          "package_name": "com.example.to_marketing"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfas2Oqau3w-Lyy4GhqXVhMMqvwxZ99Hw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
