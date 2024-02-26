@@ -30,7 +30,7 @@ class PersonalInfoItem {
         companyName: json['companyName'],
         post: json['post'],
         note: json['note'],
-      );
+  );
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -41,5 +41,5 @@ class PersonalInfoItem {
         'companyName': companyName,
         'post': post,
         'note': note,
-      };
+  };
 }
