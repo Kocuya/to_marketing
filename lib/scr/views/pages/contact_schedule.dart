@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../bloc/personal_info_bloc.dart';
+import '../widgets/cantact_list.dart';
 import 'add_person.dart';
 import 'package:provider/provider.dart';
 import '/scr/models/personal_information.dart';
-import '/scr/views/widgets/cantact_list.dart';
 import 'option.dart';
 
 class SchedulePage extends StatefulWidget {
@@ -28,9 +28,10 @@ class SchedulePageState extends State<SchedulePage> with RouteAware {
         automaticallyImplyLeading: false,
         actions: <Widget>[
           IconButton(
-            icon:const Icon(Icons.more_vert, size: 32),
+            icon: const Icon(Icons.more_vert, size: 32),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute (builder: (context) => const OptionPage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const OptionPage()));
             },
           ),
           IconButton(
@@ -49,12 +50,30 @@ class SchedulePageState extends State<SchedulePage> with RouteAware {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final items = snapshot.data!;
-            final List<PersonalInfoItem> thisMonthItems = items
-                .where((item) => item.notificationTag == "everyMonth")
-                .toList();
-            final List<PersonalInfoItem> otherItems = items
-                .where((item) => item.notificationTag != "everyMonth")
-                .toList();
+            final currentMonth = DateTime.now();
+            final currentWentMonth =
+                (currentMonth.year - 2021) * 12 + currentMonth.month;
+
+            // 今月の予定をフィルタリング
+            final List<PersonalInfoItem> thisMonthItems = items.where((item) {
+              final difference = currentWentMonth - item.wentMonth!;
+              switch (item.notificationTag) {
+                case 'everyMonth':
+                  return difference > 1;
+                case 'everyQuarterYear':
+                  return difference > 3;
+                case 'everyHarfYear':
+                  return difference > 6;
+                case 'everyYear':
+                  return difference > 12;
+                default:
+                  return false; // ここには来ないはず
+              }
+            }).toList();
+
+            // その他の予定
+            final List<PersonalInfoItem> otherItems =
+                items.where((item) => !thisMonthItems.contains(item)).toList();
 
             return SingleChildScrollView(
               child: Column(
@@ -62,11 +81,11 @@ class SchedulePageState extends State<SchedulePage> with RouteAware {
                 children: <Widget>[
                   const SectionTitle(title: '今月の予定'),
                   ...thisMonthItems
-                      .map((item) => PersonalInfoTile(infoItem: item))
+                      .map((item) => PersonalInfoTile(infoItem: item, isThisMonth: true))
                       .toList(),
                   const SectionTitle(title: 'その他'),
                   ...otherItems
-                      .map((item) => PersonalInfoTile(infoItem: item))
+                      .map((item) => PersonalInfoTile(infoItem: item, isThisMonth: false))
                       .toList(),
                 ],
               ),

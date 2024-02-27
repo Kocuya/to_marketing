@@ -11,7 +11,7 @@ class OptionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('設定'),
+        title: const Text('オプション'),
         centerTitle: true,
       ),
       body: StreamBuilder<User?>(
@@ -38,14 +38,18 @@ class OptionPage extends StatelessWidget {
                   title: 'アップロード',
                   icon: Icons.upload_file,
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('仮のため、まだ実装されていません')));
+                    print('アップロードを行います');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('仮のため、まだ実装されていません')));
                   },
                 ),
                 OptionTile(
                   title: 'ダウンロード',
                   icon: Icons.download,
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('仮のため、まだ実装されていません')));
+                    print('ダウンロードを行います');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('データが見つかりませんでした')));
                   },
                 ),
                 OptionTile(

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:to_marketing/scr/bloc/personal_info_bloc.dart';
+import 'package:to_marketing/scr/views/pages/add_person.dart';
+import '../../bloc/data_storage.dart';
 import '/scr/models/personal_information.dart';
 import '/scr/views/pages/details_of_item.dart';
 
 class PersonalInfoTile extends StatefulWidget {
   final PersonalInfoItem infoItem;
+  final bool isThisMonth;
 
-  const PersonalInfoTile({Key? key, required this.infoItem}) : super(key: key);
+  const PersonalInfoTile({Key? key, required this.infoItem, required this.isThisMonth}) : super(key: key);
 
   @override
   PersonalInfoTileState createState() => PersonalInfoTileState();
@@ -30,6 +33,7 @@ class PersonalInfoTileState extends State<PersonalInfoTile> {
         return Colors.grey; // デフォルトの色
     }
   }
+
   String getJapanese(String notificationTag) {
     switch (notificationTag) {
       case 'everyMonth':
@@ -52,18 +56,20 @@ class PersonalInfoTileState extends State<PersonalInfoTile> {
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: const Color.fromARGB(255, 227, 227, 227), width: 2),
+          border: Border.all(
+              color: const Color.fromARGB(255, 227, 227, 227), width: 2),
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: InkWell(
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DetailsItemPage(item: widget.infoItem)),
+              MaterialPageRoute(
+                  builder: (context) => DetailsItemPage(item: widget.infoItem)),
             ).then((_) => bloc.loadPersonalInfoItems());
           },
           child: Padding(
-            padding:const EdgeInsets.symmetric(vertical: 4, horizontal: 18),
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 18),
             child: Row(
               children: [
                 Expanded(
@@ -77,7 +83,8 @@ class PersonalInfoTileState extends State<PersonalInfoTile> {
                           children: [
                             Text(
                               widget.infoItem.name,
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
@@ -91,19 +98,23 @@ class PersonalInfoTileState extends State<PersonalInfoTile> {
                         ),
                         const SizedBox(height: 4),
                         Container(
-                          padding:const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
-                            color: getColorForNotificationTag(widget.infoItem.notificationTag),
+                            color: getColorForNotificationTag(
+                                widget.infoItem.notificationTag),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.notifications, color: Colors.white, size: 20),
+                              const Icon(Icons.notifications,
+                                  color: Colors.white, size: 20),
                               const SizedBox(width: 4),
                               Text(
                                 getJapanese(widget.infoItem.notificationTag),
-                                style:const TextStyle(color: Colors.white, fontSize: 14),
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 14),
                               ),
                             ],
                           ),
@@ -112,28 +123,42 @@ class PersonalInfoTileState extends State<PersonalInfoTile> {
                     ),
                   ),
                 ),
-                  Padding(
-                    padding:const EdgeInsets.symmetric(horizontal: 10),
-                    child: Container(
-                      width: 30,
-                      height: 30,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: _isDone ? const Color.fromARGB(255, 245, 255, 245) : const Color.fromARGB(255, 246, 246, 246),
-                        border: Border.all(color: _isDone ? Colors.green : Colors.grey, width: 1.4),
-                        shape: BoxShape.circle,
-                      ),
-                      child: IconButton(
-                        icon: Icon(Icons.done, color: _isDone ? Colors.green : Colors.grey),
-                        onPressed: () {
-                          setState(() {
-                            _isDone = !_isDone;
-                          });
-                        },
-                        padding: EdgeInsets.zero,
-                      ),
+                if(widget.isThisMonth)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: _isDone
+                          ? const Color.fromARGB(255, 245, 255, 245)
+                          : const Color.fromARGB(255, 246, 246, 246),
+                      border: Border.all(
+                          color: _isDone ? Colors.green : Colors.grey,
+                          width: 1.4),
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      icon: Icon(Icons.done,
+                          color: _isDone ? Colors.green : Colors.grey),
+                      onPressed: () async {
+                        setState(() {
+                          _isDone = true;
+                        });
+                        if (_isDone = true) {
+                          await Future.delayed(const Duration(seconds: 1));
+                          widget.infoItem.wentMonth = calculateWentMonth();
+                          final dataStorage = DataStorage();
+                          await dataStorage.savePersonData(widget.infoItem);
+                          bloc.updatePersonalInfoItem(widget.infoItem);
+                          bloc.loadPersonalInfoItems();
+                        }
+                      },
+                      padding: EdgeInsets.zero,
                     ),
                   ),
+                ),
               ],
             ),
           ),

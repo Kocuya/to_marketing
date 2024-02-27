@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../models/personal_information.dart';
 
+int calculateWentMonth() {
+  final currentDate = DateTime.now();
+  return (currentDate.year - 2021) * 12 + currentDate.month - 1;
+}
+
 class ItemEditingPage extends StatefulWidget {
   final PersonalInfoItem item;
 
@@ -49,6 +54,10 @@ class ItemEditingState extends State<ItemEditingPage> {
           IconButton(
             icon: const Icon(Icons.done),
             onPressed: () {
+              bool isNotificationTagChanged = _frequency != widget.item.notificationTag;
+
+              int newWentMonth = isNotificationTagChanged ? calculateWentMonth() : widget.item.wentMonth!;
+              
               final updatedItem = PersonalInfoItem(
                 id: widget.item.id,
                 name: _nameController.text,
@@ -58,6 +67,7 @@ class ItemEditingState extends State<ItemEditingPage> {
                 post: _positionController.text,
                 note: _noteController.text,
                 notificationTag: _frequency ?? widget.item.notificationTag, // 通知頻度が選択されていない場合、元の値を使用
+                wentMonth: newWentMonth,
               );
               Navigator.pop(context, updatedItem);
             },

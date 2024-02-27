@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import '/scr/models/personal_information.dart';
 import '/scr/bloc/data_storage.dart';
 
+int calculateWentMonth() {
+  final currentDate = DateTime.now();
+  return (currentDate.year - 2021) * 12 + currentDate.month - 1;
+}
+
 class PersonAddPage extends StatefulWidget {
   const PersonAddPage({super.key});
 
@@ -18,61 +23,60 @@ class PersonAddPageState extends State<PersonAddPage> {
   String _post = '';
   String _note = '';
   String _notificationTag = 'everyMonth';
+  final int _wentMonth = calculateWentMonth();
 
   @override
-Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:const Text('人物追加', textAlign: TextAlign.center),
+        title: const Text('人物追加'),
         centerTitle: true,
         leading: IconButton(
-          icon:const Icon(Icons.close),
+          icon: const Icon(Icons.close),
           onPressed: () => Navigator.pop(context),
         ),
         actions: <Widget>[
           IconButton(
-  icon:const Icon(Icons.done),
-  onPressed: () async {
-    // 非同期操作前にScaffoldMessengerStateを取得
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
+            icon: const Icon(Icons.done),
+            onPressed: () async {
+              final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      
-      PersonalInfoItem personalInfoItem = PersonalInfoItem(
-        name: _name,
-        notificationTag: _notificationTag,
-        phoneNumber: _phoneNumber,
-        email: _email,
-        companyName: _companyName,
-        post: _post,
-        note: _note,
-      );
+              if (_formKey.currentState!.validate()) {
+                _formKey.currentState!.save();
 
-      final storage = DataStorage();
+                // PersonalInfoItemのインスタンス生成時にwentMonthも設定
+                PersonalInfoItem personalInfoItem = PersonalInfoItem(
+                  name: _name,
+                  notificationTag: _notificationTag,
+                  phoneNumber: _phoneNumber,
+                  email: _email,
+                  companyName: _companyName,
+                  post: _post,
+                  note: _note,
+                  wentMonth: _wentMonth, // wentMonthを設定
+                );
 
-      try {
-        await storage.savePersonData(personalInfoItem);
-        // 非同期操作後にScaffoldMessengerStateを使用
-        scaffoldMessenger.showSnackBar(
-          const SnackBar(content: Text('データを保存しました')),
-        );
-        Navigator.pop(context);
-      } catch (e) {
-        // エラー処理
-        print('失敗しています');
-        scaffoldMessenger.showSnackBar(
-          const SnackBar(content: Text('データの保存に失敗しました')),
-        );
-      }
-    } else {
-      // 非同期操作を行わない場合でも同じオブジェクトを使用
-      scaffoldMessenger.showSnackBar(
-        const SnackBar(content: Text('*は入力必須です')),
-      );
-    }
-  },
-),
+                final storage = DataStorage();
+
+                try {
+                  await storage.savePersonData(personalInfoItem);
+                  scaffoldMessenger.showSnackBar(
+                    const SnackBar(content: Text('データを保存しました')),
+                  );
+                  Navigator.pop(context);
+                } catch (e) {
+                  print('保存に失敗しました');
+                  scaffoldMessenger.showSnackBar(
+                    const SnackBar(content: Text('データの保存に失敗しました')),
+                  );
+                }
+              } else {
+                scaffoldMessenger.showSnackBar(
+                  const SnackBar(content: Text('*は入力必須です')),
+                );
+              }
+            },
+          ),
         ],
       ),
       body: Form(
