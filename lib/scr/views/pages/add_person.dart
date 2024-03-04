@@ -103,13 +103,12 @@ class PersonAddPageState extends State<PersonAddPage> {
                 decoration:const InputDecoration(
                   labelText: '通知頻度',
                 ),
-                items: ['everyMonth', 'everyQuarterYear', 'everyHarfYear', 'everyYear']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+                items:const <DropdownMenuItem<String>>[
+                  DropdownMenuItem(value: 'everyMonth', child: Text('一ヶ月毎')),
+                  DropdownMenuItem(value: 'everyQuarterYear', child: Text('三ヶ月毎')),
+                  DropdownMenuItem(value: 'everyHalfYear', child: Text('六ヶ月毎')),
+                  DropdownMenuItem(value: 'everyYear', child: Text('一年毎')),
+                ],
                 onChanged: (String? newValue) {
                   setState(() {
                     _notificationTag = newValue!;

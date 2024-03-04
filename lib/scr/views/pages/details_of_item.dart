@@ -25,6 +25,21 @@ class DetailsItemPageState extends State<DetailsItemPage> {
 
   DataStorage dataStorage = DataStorage();
 
+  String getNotificationTagInJapanese(String? tag) {
+    switch (tag) {
+      case 'everyMonth':
+        return '一ヶ月毎';
+      case 'everyQuarterYear':
+        return '三ヶ月毎';
+      case 'everyHarfYear':
+        return '六ヶ月毎';
+      case 'everyYear':
+        return '一年毎';
+      default:
+        return '不明';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +92,7 @@ class DetailsItemPageState extends State<DetailsItemPage> {
             const SizedBox(height: 46),
             LabeledInputField(
               label: '通知頻度',
-              title: item.notificationTag,
+              title: getNotificationTagInJapanese(item.notificationTag),
             ),
             LabeledInputField(
               label: '電話番号',

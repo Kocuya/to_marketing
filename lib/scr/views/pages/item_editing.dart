@@ -86,10 +86,27 @@ class ItemEditingState extends State<ItemEditingPage> {
             DropdownButtonFormField<String>(
               value: _frequency,
               decoration: const InputDecoration(labelText: '通知頻度'),
-              items: _frequencies.map((String value) {
-                return DropdownMenuItem(
+              items: _frequencies.map<DropdownMenuItem<String>>((String value) {
+                String displayValue;
+                switch (value) {
+                  case 'everyMonth':
+                    displayValue = '一ヶ月毎';
+                    break;
+                  case 'everyQuarterYear':
+                    displayValue = '三ヶ月毎';
+                    break;
+                  case 'everyHarfYear':
+                    displayValue = '六ヶ月毎';
+                    break;
+                  case 'everyYear':
+                    displayValue = '一年毎';
+                    break;
+                  default:
+                    displayValue = value; // 予期しない値の場合はそのまま表示
+                }
+                return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value),
+                  child: Text(displayValue),
                 );
               }).toList(),
               onChanged: (String? newValue) {

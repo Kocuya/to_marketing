@@ -5,6 +5,9 @@ import '/scr/views/pages/contact_schedule.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'scr/views/pages/login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +31,18 @@ class MyApp extends StatelessWidget {
       create: (context) => PersonalInfoBloc(),
       dispose: (context, bloc) => bloc.dispose(),
       child: MaterialApp(
-        home: const SchedulePage(),
+        home: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            // ログイン状態に基づいて表示するページを切り替える
+            if (snapshot.connectionState == ConnectionState.active) {
+              // ログインしているユーザーがあればスケジュールページを、そうでなければログインページを表示
+              return snapshot.hasData ? const SchedulePage() : const LoginPage();
+            }
+            // 接続中の状態を示すインジケーターを表示
+            return const Center(child: CircularProgressIndicator());
+          },
+        ),
         theme: ThemeData(
           textTheme: GoogleFonts.notoSansJpTextTheme(
             Theme.of(context).textTheme,
