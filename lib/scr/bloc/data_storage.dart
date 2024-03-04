@@ -25,8 +25,9 @@ class DataStorage {
       await directory.create(recursive: true);
     }
 
+    String jsonData = const JsonEncoder.withIndent('    ').convert(personalInfoItem.toJson());
     // PersonalInfoItemオブジェクトをJSONに変換して保存
-    return file.writeAsString(json.encode(personalInfoItem.toJson()));
+    return file.writeAsString(jsonData);
   }
 
   Future<void> deletePersonData(PersonalInfoItem personalInfoItem) async {

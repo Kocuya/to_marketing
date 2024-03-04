@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'login.dart';
 import 'contact_schedule.dart';
-import 'debug_page.dart'; // 利用規約ページとして仮に使用
+import 'debug_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SignupPage extends StatefulWidget {
